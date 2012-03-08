@@ -54,6 +54,18 @@ public class MyRouteBuilder extends RouteBuilder {
 				return emergencyCodes.contains(fl.getSquawk());
 			}
 		};
+		
+		Predicate isflnNumberNull = new Predicate() {
+    		
+			@Override
+			public boolean matches(Exchange exchange) {
+				Flight fl = exchange.getIn().getBody(Flight.class); 
+				if(fl.getNumber() == null)
+					return false;
+
+				return !fl.getNumber().isEmpty();
+			}
+		};
 
 		//main route
 		from("timer://pollingTimer?fixedRate=true&delay=0&period=600000")//do this action every 10 minutes
@@ -63,6 +75,7 @@ public class MyRouteBuilder extends RouteBuilder {
     		.unmarshal().json(JsonLibrary.Jackson)	//convert to JSON   		
     		.split().method(FlightSplitter.class)	//split big message into single flight messages
     		.convertBodyTo(Flight.class)			//convert flight into Flight POJO objects
+    		.filter(isflnNumberNull)
     		.setHeader("fln", simple("${body.number}"))
     		.setHeader("myID", simple("${id}"))
     		.multicast().to("direct:sendMailIfEmergency","direct:progress");
