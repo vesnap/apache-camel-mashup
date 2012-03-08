@@ -193,18 +193,25 @@ public class Flight {
 	public void setPayload(ArrayList<Object> payload) {
 		this.payload = payload;
 		
-		hexcode = payload.get(0).toString();
-		latidude = payload.get(1).toString();
-		longitude = payload.get(2).toString();
-		Track= payload.get(3).toString();
-		Altitude = payload.get(4).toString();
-		Speed = payload.get(5).toString();
-		Squawk = payload.get(6).toString();
-		RadarType = payload.get(7).toString();
-		PlaneType = payload.get(8).toString();
-		FlugzeugID = payload.get(9).toString();
-		unixTimestamp = payload.get(10).toString();
-		number = payload.get(11).toString();
+		hexcode = getString(payload,0);
+		latidude = getString(payload,1);
+		longitude = getString(payload,2);
+		Track= getString(payload,3);
+		Altitude = getString(payload,4);
+		Speed = getString(payload,5);
+		Squawk = getString(payload,6);
+		RadarType = getString(payload,7);
+		PlaneType = getString(payload,8);
+		FlugzeugID = getString(payload,9);
+		unixTimestamp = getString(payload,10);
+		number = getString(payload,11);
+	}
+	
+	public String getString(ArrayList<Object> payload,int index) {
+		if(payload.get(index) == null)
+			return "";
+		else
+			return payload.get(index).toString();
 	}
 	
 	  @Override
